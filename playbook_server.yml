@@ -1,0 +1,27 @@
+- name: Setup server
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update package cache
+      ansible.builtin.apt:
+        update_cache: yes
+      tags: config
+
+    - name: Install packages
+      ansible.builtin.package:
+        name:
+          - git
+          - make
+          - nodejs
+        state: present
+      tags: packages
+
+    - name: Create users
+      ansible.builtin.user:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - arya
+        - sansa
+        - tirion
+      tags: names
