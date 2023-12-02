@@ -1,0 +1,8 @@
+- name: Remove Git from remote servers
+  hosts: all
+  become: yes
+  tasks:
+    - name: Uninstall Git
+      package:
+        name: git
+        state: absent
