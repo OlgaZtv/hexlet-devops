@@ -1,0 +1,9 @@
+- name: Install Git on remote servers
+  hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: Install Git
+      package:
+        name: git
+        state: present
