@@ -1,0 +1,11 @@
+events {
+
+}
+
+http {
+  server {
+    listen {{nginx_port}} default_server;
+    server_name {{server_name}};
+    root /usr/share/nginx/html;
+  }
+}
