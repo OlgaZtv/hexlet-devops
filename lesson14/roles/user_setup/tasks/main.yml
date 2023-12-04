@@ -1,0 +1,16 @@
+- name: Create user
+  ansible.builtin.user:
+    name: "{{ user_name }}"
+    state: present
+    password: "{{ 'mypassword' | password_hash('sha512') }}"
+    shell: /bin/bash
+    create_home: yes
+
+- name: Add Git config for user
+  ansible.builtin.template:
+    src: gitconfig.j2
+    dest: "/home/{{ user_name }}/.gitconfig"
+    owner: "{{ user_name }}"
+    group: "{{ user_name }}"
+    mode: 0644
+

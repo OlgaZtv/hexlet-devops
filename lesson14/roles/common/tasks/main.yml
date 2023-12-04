@@ -1,0 +1,14 @@
+- name: Install Git
+  ansible.builtin.package:
+    name: git
+    state: present
+
+- name: Install Postgres
+  ansible.builtin.package:
+    name: postgresql
+    state: present
+
+- name: Install NodeJS
+  ansible.builtin.package:
+    name: nodejs
+    state: present

@@ -1,0 +1,13 @@
+- name: Set up working environment for programmers
+  hosts: all
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+
+  tasks:
+    - import_role:
+        name: user_setup
+      vars:
+        user_name: developer
+        user_email: developer@example.com
