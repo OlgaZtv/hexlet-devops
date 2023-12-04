@@ -1,0 +1,2 @@
+ansible-playbook create_users_and_gitconfig.yml -i inventory.ini -u ttalki --become
+ssh sansa@84.201.159.217 -i sansa_id_rsa

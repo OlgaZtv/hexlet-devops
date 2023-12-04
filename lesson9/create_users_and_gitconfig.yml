@@ -1,0 +1,59 @@
+- name: Создать пользователей и настроить Git
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    users:
+      - jaime
+      - sansa
+      - robert
+
+  tasks:
+    - name: Создать пользователей
+      user:
+        name: "{{ item }}"
+        state: present
+        create_home: yes
+      loop: "{{ users }}"
+
+    - name: Создать директорию .ssh для каждого пользователя
+      file:
+        path: "/home/{{ item }}/.ssh"
+        state: directory
+        mode: '700'
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      loop: "{{ users }}"
+
+    - name: Загрузить публичные ключи для каждого пользователя
+      copy:
+        src: "files/{{ item }}_id_rsa.pub"
+        dest: "/home/{{ item }}/.ssh/authorized_keys"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+        mode: '600'
+      loop: "{{ users }}"
+
+    - name: Установить конфигурацию Git для каждого пользователя
+      blockinfile:
+        path: "/home/{{ item }}/.gitconfig"
+        create: yes
+        block: |
+          [alias]
+            co = checkout
+            ci = commit
+            st = status
+            br = branch
+            hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
+            type = cat-file -t
+            dump = cat-file -p
+            commend = commit --amend
+          [core]
+            excludesFile = ~/.gitignore_global
+            editor = vim
+          [user]
+            email = {{ item }}@test.com
+            name = {{ item }}
+          [credential]
+            helper = store
+      loop: "{{ users }}"
