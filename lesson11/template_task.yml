@@ -1,0 +1,13 @@
+- name: Create index.html with template
+  hosts: all
+  become: yes
+  gather_facts: yes
+  tasks:
+    - name: Set server_name variable
+      set_fact:
+        server_name: "This is server {{ inventory_hostname }}!"
+
+    - name: Generate index.html from template
+      ansible.builtin.template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
