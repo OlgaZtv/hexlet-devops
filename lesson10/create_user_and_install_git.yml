@@ -1,0 +1,38 @@
+- name: Install Git and create user
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    user_name: newuser
+
+  tasks:
+    - name: Install Git on Ubuntu
+      ansible.builtin.apt:
+        name: git
+        state: present
+      when: "'ubuntu' in group_names"
+
+    - name: Install Git on CentOS
+      ansible.builtin.yum:
+        name: git
+        state: present
+      when: "'centos' in group_names"
+
+    - name: Create user
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        state: present
+        password: "{{ 'mypassword' | password_hash('sha512') }}"
+        shell: /bin/bash
+        create_home: yes
+
+    - name: Add Git config
+      ansible.builtin.blockinfile:
+        path: "/home/{{ user_name }}/.gitconfig"
+        create: yes
+        block: |
+          [alias]
+            st = status
+          [user]
+            name = {{ user_name }}
+            email = {{ user_name }}@example.com
